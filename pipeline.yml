@@ -1,0 +1,27 @@
+---
+resources:
+  - name: counter-src
+    type: git
+    source:
+      branch: master
+      uri: https://github.com/arshadalis/counter.git
+      username: arshadalis
+      password: ((password))
+
+jobs:
+  - name: build-counter
+    plan:
+      - get: counter-src
+        trigger: true
+      - task: build
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: node
+              tag: 14-alpine
+          inputs:
+            - name: counter-src
+            - run:
+            path: counter-src/build
